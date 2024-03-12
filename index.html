@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- external stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+    <select id="dataSelector">
+      <option value="ratioFirms">Black-Owned Firms (Ratio)</option>
+      <option value="ratioEmployees">
+        Employees of Black-Owned Firms (Ratio)
+      </option>
+      <option value="ratioPayroll">
+        Annual Payroll of Black-Owned Firms (Ratio)
+      </option>
+    </select>
+
+    <script>
+      const data = {
+        popRank: {
+          National: [8, 11, 3, 4, 14, 5, 2, 9, 1, 7, 10, 12, 13, 15, 6],
+        },
+        blackEmployment: {
+          National: [
+            0.336975722, 0.082592921, 0.139672202, 0.161430015, 0.170414243,
+            0.159843266, 0.068122845, 0.186821157, 0.15178015, 0.180445911,
+            0.066491977, 0.073067103, 0.070545077, 0.057750456, 0.246383861,
+          ],
+        },
+        ratioFirms: {
+          National: [
+            0.260276241, 0.204940581, 0.201723044, 0.219766233, 0.178647329,
+            0.246398344, 0.335817283, 0.250108946, 0.228962973, 0.179981566,
+            0.243863636, 0.248302091, 0.282228202, 0.293921955, 0.307543202,
+          ],
+        },
+        ratioEmployees: {
+          National: [
+            0.09047324, 0.075963557, 0.089310036, 0.091562881, 0.098265844,
+            0.104534812, 0.172893959, 0.106158309, 0.071335045, 0.075099859,
+            0.14109199, 0.066763312, 0.142484637, 0.121296883, 0.15859265,
+          ],
+        },
+        ratioPayroll: {
+          National: [
+            0.045553243, 0.032724022, 0.053465142, 0.044310888, 0.056849414,
+            0.047647374, 0.140743809, 0.059488326, 0.037986605, 0.03462834,
+            0.072096128, 0.045147685, 0.052327352, 0.057329206, 0.112982885,
+          ],
+        },
+      };
+
+      // Charts.js visualization
+      const ctx = document.getElementById("myChart").getContext("2d");
+      const titleMappings = {
+        ratioFirms: "Ratio of Black-Owned Firms to % Black Employment",
+        ratioEmployees:
+          "Ratio of Employees of Black-Owned Firms to % Black Employment",
+        ratioPayroll:
+          "Ratio of Annual Payroll of Black-Owned Firms to % Black Employment",
+      };
+      const myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: [
+            "Atlanta",
+            "Boston",
+            "Chicago",
+            "Dallas",
+            "Detroit",
+            "Houston",
+            "Los Angeles",
+            "Miami",
+            "New York City",
+            "Philadelphia",
+            "Phoenix",
+            "Riverside/San Bernardino",
+            "San Francisco",
+            "Seattle",
+            "Washington, D.C.",
+          ],
+          datasets: [
+            {
+              label: "",
+              data: data.ratioFirms.National, // Initial data - BO firms
+              backgroundColor: "rgba(255, 99, 132, 0.8)",
+              hoverBackgroundColor: "rgba(255, 99, 132, 1)",
+              barPercentage: 1, // the blue and red bars touch within each category
+              categoryPercentage: 0.78, // higher values mean the bars between categories get closer
+            },
+          ],
+        },
+        options: {
+          // bar chart orientation (this makes it a vertical bar chart)
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  size: 14,
+                  weight: "bold",
+                },
+              },
+            },
+            tooltip: {
+              backgroundColor: "#6c6f6d",
+              titleFont: {
+                size: 16,
+              },
+              bodyFont: {
+                size: 16,
+              },
+              callbacks: {
+                title: (context) => {
+                  return context[0].label.replaceAll(",", " ");
+                },
+                label: function (tooltipItem) {
+                  const label = tooltipItem.dataset.label; // Data series name
+                  const value = tooltipItem.formattedValue; // Percentage value
+                  return `${label}: ${value}%`; // Formatted tooltip content
+                },
+              },
+            },
+            title: {
+              display: true,
+              text: titleMappings.ratioFirms,
+              font: {
+                weight: "bold",
+                size: 18,
+              },
+              padding: {
+                top: 10,
+                bottom: 5,
+              },
+            },
+          },
+          scales: {
+            y: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                beginAtZero: true,
+                font: {
+                  size: 11,
+                },
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                callback: function (value, index, ticks) {
+                  return value + "%";
+                },
+                font: {
+                  size: 11,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Sort data values largest to smallest upon chart load
+      const sortedData = data.ratioFirms.National.slice().sort((a, b) => b - a);
+      myChart.data.datasets[0].data = sortedData;
+      myChart.update();
+
+      // Event listener for dropdown change
+      document
+        .getElementById("dataSelector")
+        .addEventListener("change", function () {
+          const selectedValue = this.value;
+          const selectedTitle = titleMappings[selectedValue];
+          const selectedData = data[selectedValue].National;
+
+          myChart.data.datasets[0].data = selectedData;
+          myChart.options.plugins.title.text = selectedTitle;
+          myChart.update();
+        });
+    </script>
+  </body>
+</html>
