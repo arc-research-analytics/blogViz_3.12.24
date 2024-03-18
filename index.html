@@ -106,7 +106,8 @@
               label: "",
               data: initialData,
               backgroundColor: "rgba(255, 99, 132, 0.6)", // Bubble color
-              hoverBackgroundColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 0,
+              hoverBackgroundColor: "rgba(255, 99, 132, 0.9)",
             },
           ],
         },
@@ -116,11 +117,13 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false,
+              display: false, // don't show the box above the chart
             },
             tooltip: {
               mode: "nearest",
+              displayColors: false, // remove the colored square in the tooltip
               backgroundColor: "rgba(108,111,109,0.7)",
+              titleAlign: "center",
               titleFont: {
                 size: 16,
               },
@@ -130,31 +133,24 @@
               callbacks: {
                 // Tooltip content adjustments for bubble chart
                 title: (context) => {
-                  return context[0].label.replaceAll(",", " ");
+                  return context.label;
                 },
-                label: function (tooltipItem) {
-                  const datasetLabel =
-                    myChart.data.datasets[tooltipItem.datasetIndex].label; // Get chosen X-axis variable
-                  const blackEmployment = tooltipItem.formattedValue + "%"; // Black Employment
-                  const metroPopulation =
-                    Math.sqrt(data.metroPop.National[tooltipItem.dataIndex]) *
-                    100; // Metro population
+                label: function (context) {
+                  const label = context.dataIndex;
+                  const metroPopValue = data.metroPop.National[label];
+                  const blackEmployment = data.blackEmployment.National[label];
 
-                  // Format metroPopulation for readability (e.g., 1,234,567)
-                  const formattedPopulation = metroPopulation.toLocaleString(
-                    "en-US",
-                    {
-                      maximumFractionDigits: 0,
-                    }
-                  );
-
-                  return `${datasetLabel}: ${blackEmployment}\nMetro Population: ${formattedPopulation}`;
+                  // Return only the formatted value (without the legend icon)
+                  return [
+                    `Population: ${metroPopValue.toLocaleString()}`,
+                    `Black Employment: ${(blackEmployment * 100).toFixed(2)}%`,
+                  ];
                 },
               },
             },
             title: {
               display: true,
-              text: "Characteristics of Black-Owned Firms vs. Black Employment", // Initial title
+              text: "Traits of Black-Owned Firms vs. Black Employment in Largest US Metro Areas", // Initial title
               font: {
                 weight: 600,
                 size: 18,
@@ -166,7 +162,7 @@
             },
             subtitle: {
               display: true,
-              text: "Bubble size of 15 largest US metros representative of 2022 population",
+              text: "Bubble size representative of 2022 metropolitan population",
               font: {
                 weight: 300,
                 size: 15,
