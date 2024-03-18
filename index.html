@@ -105,7 +105,7 @@
             {
               label: "",
               data: initialData,
-              backgroundColor: "rgba(255, 99, 132, 0.8)", // Bubble color
+              backgroundColor: "rgba(255, 99, 132, 0.6)", // Bubble color
               hoverBackgroundColor: "rgba(255, 99, 132, 1)",
             },
           ],
@@ -119,12 +119,13 @@
               display: false,
             },
             tooltip: {
-              backgroundColor: "#6c6f6d",
+              mode: "nearest",
+              backgroundColor: "rgba(108,111,109,0.7)",
               titleFont: {
                 size: 16,
               },
               bodyFont: {
-                size: 16,
+                size: 14,
               },
               callbacks: {
                 // Tooltip content adjustments for bubble chart
