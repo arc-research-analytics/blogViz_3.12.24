@@ -74,11 +74,12 @@
         BOFirms_employees: "Employees of Black-Owned Firms (as % of total)",
         BOFirms_payroll: "Annual Payroll of Black-Owned Firms (as % of total)",
       };
+      const bubbleRadius = 150;
 
       const initialData = data.BOFirms.National.map((value, index) => ({
         x: value,
         y: data.blackEmployment.National[index],
-        r: Math.sqrt(data.metroPop.National[index]) / 150,
+        r: Math.sqrt(data.metroPop.National[index]) / bubbleRadius,
       }));
 
       const myChart = new Chart(ctx, {
@@ -239,7 +240,7 @@
         myChart.data.datasets[0].data = selectedData.map((value, index) => ({
           x: value, // x-axis data
           y: data.blackEmployment.National[index], // y-axis data (constant)
-          r: Math.sqrt(data.metroPop.National[index]) / 100, // Bubble radius
+          r: Math.sqrt(data.metroPop.National[index]) / bubbleRadius, // Bubble radius
         }));
 
         // Update chart's x-axis title
