@@ -78,7 +78,7 @@
       const initialData = data.BOFirms.National.map((value, index) => ({
         x: value,
         y: data.blackEmployment.National[index],
-        r: Math.sqrt(data.metroPop.National[index]) / 100,
+        r: Math.sqrt(data.metroPop.National[index]) / 110,
       }));
 
       const myChart = new Chart(ctx, {
