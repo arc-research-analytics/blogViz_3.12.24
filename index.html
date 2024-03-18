@@ -74,6 +74,11 @@
         BOFirms_employees: "Employees of Black-Owned Firms (as % of total)",
         BOFirms_payroll: "Annual Payroll of Black-Owned Firms (as % of total)",
       };
+      const tooltipMappings = {
+        BOFirms: "% Black-Owned Firms",
+        BOFirms_employees: "Employees of Black-Owned Firms",
+        BOFirms_payroll: "Annual Payroll of Black-Owned Firms",
+      };
       const bubbleRadius = 150;
 
       const initialData = data.BOFirms.National.map((value, index) => ({
@@ -140,11 +145,19 @@
                   const label = context.dataIndex;
                   const metroPopValue = data.metroPop.National[label];
                   const blackEmployment = data.blackEmployment.National[label];
+                  const selectedOption =
+                    document.getElementById("dataSelector").value;
+                  const xAxisVariableName = tooltipMappings[selectedOption];
+                  const selectedDataPoint =
+                    myChart.data.datasets[0].data[label].x;
 
                   // Return only the formatted value (without the legend icon)
                   return [
                     `Population: ${metroPopValue.toLocaleString()}`,
                     `Black Employment: ${(blackEmployment * 100).toFixed(2)}%`,
+                    `${xAxisVariableName}: ${(selectedDataPoint * 100).toFixed(
+                      2
+                    )}%`,
                   ];
                 },
               },
