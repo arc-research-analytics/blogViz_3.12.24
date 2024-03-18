@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Bubble</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Include Chart.js library -->
@@ -14,46 +15,54 @@
       <canvas id="myChart"></canvas>
     </div>
     <select id="dataSelector">
-      <option value="ratioFirms">Black-Owned Firms (Ratio)</option>
-      <option value="ratioEmployees">
-        Employees of Black-Owned Firms (Ratio)
-      </option>
-      <option value="ratioPayroll">
-        Annual Payroll of Black-Owned Firms (Ratio)
+      <option value="BOFirms">Black-Owned Firms</option>
+      <option value="BOFirms_employees">Employees of Black-Owned Firms</option>
+      <option value="BOFirms_payroll">
+        Annual Payroll of Black-Owned Firms
       </option>
     </select>
 
+    <!-- bubble chart -->
     <script>
       const data = {
-        popRank: {
-          National: [8, 11, 3, 4, 14, 5, 2, 9, 1, 7, 10, 12, 13, 15, 6],
+        // 2022 metro population totals from Wiki
+        metroPop: {
+          National: [
+            19557311, 12872322, 9274140, 7943685, 7368466, 6265183, 6241164,
+            6237435, 6139340, 5015678, 4900550, 4667558, 4579599, 4345761,
+            4034248,
+          ],
         },
+        // data sorted by NYC through Seattle (descending pop)
         blackEmployment: {
           National: [
-            0.336975722, 0.082592921, 0.139672202, 0.161430015, 0.170414243,
-            0.159843266, 0.068122845, 0.186821157, 0.15178015, 0.180445911,
-            0.066491977, 0.073067103, 0.070545077, 0.057750456, 0.246383861,
+            0.15178015, 0.068122845, 0.139672202, 0.161430015, 0.159843266,
+            0.246383861, 0.180445911, 0.336975722, 0.186821157, 0.066491977,
+            0.082592921, 0.073067103, 0.070545077, 0.170414243, 0.057750456,
           ],
         },
-        ratioFirms: {
+        // data sorted by NYC through Seattle (descending pop)
+        BOFirms: {
           National: [
-            0.260276241, 0.204940581, 0.201723044, 0.219766233, 0.178647329,
-            0.246398344, 0.335817283, 0.250108946, 0.228962973, 0.179981566,
-            0.243863636, 0.248302091, 0.282228202, 0.293921955, 0.307543202,
+            0.034752034, 0.022876829, 0.028175102, 0.035476866, 0.039385116,
+            0.075773681, 0.032476938, 0.087706774, 0.046725643, 0.016214975,
+            0.016926641, 0.018142714, 0.01990981, 0.030444049, 0.016974127,
           ],
         },
-        ratioEmployees: {
+        // data sorted by NYC through Seattle (descending pop)
+        BOFirms_employees: {
           National: [
-            0.09047324, 0.075963557, 0.089310036, 0.091562881, 0.098265844,
-            0.104534812, 0.172893959, 0.106158309, 0.071335045, 0.075099859,
-            0.14109199, 0.066763312, 0.142484637, 0.121296883, 0.15859265,
+            0.010827244, 0.011778028, 0.012474129, 0.014780997, 0.016709186,
+            0.039074669, 0.013551462, 0.030487285, 0.019832618, 0.009381485,
+            0.006274052, 0.004878202, 0.01005159, 0.016745899, 0.00700495,
           ],
         },
-        ratioPayroll: {
+        // data sorted by NYC through Seattle (descending pop)
+        BOFirms_payroll: {
           National: [
-            0.045553243, 0.032724022, 0.053465142, 0.044310888, 0.056849414,
-            0.047647374, 0.140743809, 0.059488326, 0.037986605, 0.03462834,
-            0.072096128, 0.045147685, 0.052327352, 0.057329206, 0.112982885,
+            0.005765613, 0.009587869, 0.007467594, 0.007153107, 0.007616112,
+            0.027837159, 0.006248542, 0.015350337, 0.011113678, 0.004793814,
+            0.002702773, 0.003298811, 0.003691437, 0.00968795, 0.003310788,
           ],
         },
       };
@@ -61,57 +70,53 @@
       // Charts.js visualization
       const ctx = document.getElementById("myChart").getContext("2d");
       const titleMappings = {
-        ratioFirms: "Ratio of Black-Owned Firms to % Black Employment",
-        ratioEmployees:
-          "Ratio of Employees of Black-Owned Firms to % Black Employment",
-        ratioPayroll:
-          "Ratio of Annual Payroll of Black-Owned Firms to % Black Employment",
+        BOFirms: "Black-Owned Firms (as % of total firms)",
+        BOFirms_employees: "Employees of Black-Owned Firms (as % of total)",
+        BOFirms_payroll: "Annual Payroll of Black-Owned Firms (as % of total)",
       };
+
+      const initialData = data.BOFirms.National.map((value, index) => ({
+        x: value,
+        y: data.blackEmployment.National[index],
+        r: Math.sqrt(data.metroPop.National[index]) / 100,
+      }));
+
       const myChart = new Chart(ctx, {
-        type: "bar",
+        type: "bubble",
         data: {
           labels: [
-            "Atlanta",
-            "Boston",
+            "New York City",
+            "Los Angeles",
             "Chicago",
             "Dallas",
-            "Detroit",
             "Houston",
-            "Los Angeles",
-            "Miami",
-            "New York City",
+            "Washington, D.C.",
             "Philadelphia",
+            "Atlanta",
+            "Miami",
             "Phoenix",
+            "Boston",
             "Riverside/San Bernardino",
             "San Francisco",
+            "Detroit",
             "Seattle",
-            "Washington, D.C.",
           ],
           datasets: [
             {
               label: "",
-              data: data.ratioFirms.National, // Initial data - BO firms
-              backgroundColor: "rgba(255, 99, 132, 0.8)",
+              data: initialData,
+              backgroundColor: "rgba(255, 99, 132, 0.8)", // Bubble color
               hoverBackgroundColor: "rgba(255, 99, 132, 1)",
-              barPercentage: 1, // the blue and red bars touch within each category
-              categoryPercentage: 0.78, // higher values mean the bars between categories get closer
             },
           ],
         },
         options: {
-          // bar chart orientation (this makes it a vertical bar chart)
-          indexAxis: "y",
+          // Responsive and maintain aspect ratio options remain the same
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: true,
-              labels: {
-                font: {
-                  size: 14,
-                  weight: "bold",
-                },
-              },
+              display: false,
             },
             tooltip: {
               backgroundColor: "#6c6f6d",
@@ -122,75 +127,129 @@
                 size: 16,
               },
               callbacks: {
+                // Tooltip content adjustments for bubble chart
                 title: (context) => {
                   return context[0].label.replaceAll(",", " ");
                 },
                 label: function (tooltipItem) {
-                  const label = tooltipItem.dataset.label; // Data series name
-                  const value = tooltipItem.formattedValue; // Percentage value
-                  return `${label}: ${value}%`; // Formatted tooltip content
+                  const datasetLabel =
+                    myChart.data.datasets[tooltipItem.datasetIndex].label; // Get chosen X-axis variable
+                  const blackEmployment = tooltipItem.formattedValue + "%"; // Black Employment
+                  const metroPopulation =
+                    Math.sqrt(data.metroPop.National[tooltipItem.dataIndex]) *
+                    100; // Metro population
+
+                  // Format metroPopulation for readability (e.g., 1,234,567)
+                  const formattedPopulation = metroPopulation.toLocaleString(
+                    "en-US",
+                    {
+                      maximumFractionDigits: 0,
+                    }
+                  );
+
+                  return `${datasetLabel}: ${blackEmployment}\nMetro Population: ${formattedPopulation}`;
                 },
               },
             },
             title: {
               display: true,
-              text: titleMappings.ratioFirms,
+              text: "Characteristics of Black-Owned Firms vs. Black Employment", // Initial title
               font: {
-                weight: "bold",
+                weight: 600,
                 size: 18,
               },
               padding: {
-                top: 10,
-                bottom: 5,
+                top: 20,
+                bottom: 6,
+              },
+            },
+            subtitle: {
+              display: true,
+              text: "Bubble size of 15 largest US metros representative of 2022 population",
+              font: {
+                weight: 300,
+                size: 15,
+              },
+              padding: {
+                bottom: 20,
               },
             },
           },
           scales: {
-            y: {
+            x: {
+              // Adjust x-axis label configuration for percentages
               grid: {
-                display: false,
+                display: true,
               },
               ticks: {
                 beginAtZero: true,
                 font: {
                   size: 11,
                 },
+                callback: function (value, index, ticks) {
+                  return (value * 100).toFixed(1) + "%";
+                },
+              },
+              title: {
+                display: true,
+                text: titleMappings.BOFirms, // Initial x-axis label
+                font: {
+                  weight: 600,
+                  size: 18,
+                },
+                padding: {
+                  top: 20,
+                  bottom: 5, // Added bottom padding for x-axis title
+                },
               },
             },
-            x: {
+            y: {
+              // Adjust y-axis label configuration for population rank
               grid: {
-                display: false,
+                display: true,
               },
               ticks: {
-                callback: function (value, index, ticks) {
-                  return value + "%";
-                },
                 font: {
                   size: 11,
                 },
+                callback: function (value, index, ticks) {
+                  return value * 100 + "%";
+                },
+              },
+              title: {
+                display: true,
+                text: "Black Employment (as % of total employment)", // Y-axis title
+                font: {
+                  size: 18,
+                  weight: "bold",
+                },
+                padding: 15,
               },
             },
           },
         },
       });
 
-      // Sort data values largest to smallest upon chart load
-      const sortedData = data.ratioFirms.National.slice().sort((a, b) => b - a);
-      myChart.data.datasets[0].data = sortedData;
-      myChart.update();
-
       // Event listener for dropdown change
-      document
-        .getElementById("dataSelector")
-        .addEventListener("change", function () {
-          const selectedValue = this.value;
-          const selectedTitle = titleMappings[selectedValue];
-          const selectedData = data[selectedValue].National;
+      const dataSelector = document.getElementById("dataSelector");
+      dataSelector.addEventListener("change", function () {
+        const selectedValue = dataSelector.value;
+        const selectedTitle = titleMappings[selectedValue];
+        const selectedData = data[selectedValue].National;
 
-          myChart.data.datasets[0].data = selectedData;
-          myChart.options.plugins.title.text = selectedTitle;
-          myChart.update();
-        });
+        // Update x-axis data for the chart
+        myChart.data.datasets[0].data = selectedData.map((value, index) => ({
+          x: value, // x-axis data
+          y: data.blackEmployment.National[index], // y-axis data (constant)
+          r: Math.sqrt(data.metroPop.National[index]) / 100, // Bubble radius
+        }));
+
+        // Update chart's x-axis title
+        myChart.options.scales.x.title.text = selectedTitle;
+
+        // Update the chart
+        myChart.update();
+      });
     </script>
   </body>
 </html>
