@@ -75,7 +75,7 @@
           "Annual Payroll of Black-Owned Firms (as % of total firms)",
       };
       const tooltipMappings = {
-        BOFirms: "% Black-Owned Firms",
+        BOFirms: "Black-Owned Firms",
         BOFirms_employees: "Employees of Black-Owned Firms",
         BOFirms_payroll: "Annual Payroll of Black-Owned Firms",
       };
@@ -109,11 +109,12 @@
           ],
           datasets: [
             {
-              label: "",
               data: initialData,
               backgroundColor: "rgba(255, 99, 132, 0.6)", // Bubble color
               borderWidth: 0,
               hoverBackgroundColor: "rgba(255, 99, 132, 0.9)",
+              hoverRadius: 6, // additional width, in pixels, on hover
+              hitRadius: 30, // hit detection
             },
           ],
         },
@@ -128,7 +129,7 @@
             tooltip: {
               mode: "nearest",
               displayColors: false, // remove the colored square in the tooltip
-              backgroundColor: "rgba(108,111,109,0.7)",
+              backgroundColor: "rgba(108,111,109,0.8)",
               titleAlign: "center",
               titleFont: {
                 size: 16,
@@ -153,7 +154,7 @@
 
                   // Return only the formatted value (without the legend icon)
                   return [
-                    `Population: ${metroPopValue.toLocaleString()}`,
+                    `2023 Metro Pop: ${metroPopValue.toLocaleString()}`,
                     `Black Employment: ${(blackEmployment * 100).toFixed(2)}%`,
                     `${xAxisVariableName}: ${(selectedDataPoint * 100).toFixed(
                       2
