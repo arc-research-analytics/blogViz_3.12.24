@@ -24,8 +24,8 @@
     <script>
       // set pixel width variables
       const desktopWidth = window.innerWidth >= 768;
-      const tabletWidth = window.innerWidth >= 480 && window.innerWidth < 768;
-      const mobileWidth = window.innerWidth < 480;
+      const tabletWidth = window.innerWidth >= 501 && window.innerWidth < 768;
+      const mobileWidth = window.innerWidth < 501;
 
       const desktopTitle =
         "Black-Owned Firms vs. Black Employment in Largest US Metros";
@@ -192,7 +192,7 @@
               text: desktopWidth || tabletWidth ? desktopTitle : mobileTitle,
               font: {
                 weight: 600,
-                size: desktopWidth ? 18 : tabletWidth ? 14 : 12,
+                size: desktopWidth ? 18 : tabletWidth ? 18 : 12,
               },
               padding: {
                 top: 20,
@@ -201,10 +201,10 @@
             },
             subtitle: {
               display: true,
-              text: "Bubble size representative of 2023 metro population",
+              text: "Bubble size = 2023 metro population",
               font: {
                 weight: 300,
-                size: 15,
+                size: desktopWidth ? 15 : tabletWidth ? 15 : 10,
                 style: "italic",
               },
               padding: {
