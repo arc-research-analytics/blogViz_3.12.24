@@ -34,7 +34,7 @@
 
       // bubble size depending on screen width
       const bubbleRadiusDesktop = 150;
-      const bubbleRadiusMobile = 200;
+      const bubbleRadiusMobile = 220;
 
       const data = {
         // 2022 metro population totals from Wiki
@@ -229,7 +229,7 @@
               },
               ticks: {
                 font: {
-                  size: desktopWidth || tabletWidth ? 11 : 8,
+                  size: desktopWidth || tabletWidth ? 12 : 10,
                 },
                 callback: function (value, index, ticks) {
                   return (value * 100).toFixed(1) + "%";
@@ -241,10 +241,10 @@
                 text: titleMappings.BOFirms, // Initial x-axis label
                 font: {
                   weight: 600,
-                  size: 18,
+                  size: desktopWidth || tabletWidth ? 18 : 14,
                 },
                 padding: {
-                  top: 20,
+                  top: desktopWidth || tabletWidth ? 20 : 8,
                   bottom: 5, // Added bottom padding for x-axis title
                 },
               },
@@ -257,7 +257,7 @@
               },
               ticks: {
                 font: {
-                  size: desktopWidth || tabletWidth ? 11 : 8,
+                  size: desktopWidth || tabletWidth ? 12 : 10,
                 },
                 callback: function (value, index, ticks) {
                   return value * 100 + "%";
@@ -268,10 +268,13 @@
                 align: "start",
                 text: "Black Employment (as % of total employment)", // Y-axis title
                 font: {
-                  size: 18,
+                  size: desktopWidth || tabletWidth ? 18 : 14,
                   weight: "bold",
                 },
-                padding: 15,
+                padding: {
+                  top: desktopWidth || tabletWidth ? 15 : 8,
+                  bottom: desktopWidth || tabletWidth ? 15 : 8, // Added bottom padding for x-axis title
+                },
               },
             },
           },
