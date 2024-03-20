@@ -200,7 +200,7 @@
               text: desktopWidth || tabletWidth ? desktopTitle : mobileTitle,
               font: {
                 weight: 600,
-                size: desktopWidth ? 18 : tabletWidth ? 18 : 12,
+                size: desktopWidth || tabletWidth ? 16 : 15,
               },
               padding: {
                 top: 20,
@@ -212,7 +212,7 @@
               text: "Bubble size = 2023 metro population",
               font: {
                 weight: 300,
-                size: desktopWidth ? 15 : tabletWidth ? 15 : 10,
+                size: desktopWidth || tabletWidth ? 15 : 12,
                 style: "italic",
               },
               padding: {
@@ -229,7 +229,7 @@
               },
               ticks: {
                 font: {
-                  size: 11,
+                  size: desktopWidth || tabletWidth ? 11 : 8,
                 },
                 callback: function (value, index, ticks) {
                   return (value * 100).toFixed(1) + "%";
@@ -257,7 +257,7 @@
               },
               ticks: {
                 font: {
-                  size: 11,
+                  size: desktopWidth || tabletWidth ? 11 : 8,
                 },
                 callback: function (value, index, ticks) {
                   return value * 100 + "%";
