@@ -292,7 +292,10 @@
         myChart.data.datasets[0].data = selectedData.map((value, index) => ({
           x: value, // x-axis data
           y: data.blackEmployment.National[index], // y-axis data (constant)
-          r: Math.sqrt(data.metroPop.National[index]) / bubbleRadius, // Bubble radius
+          r:
+            desktopWidth || tabletWidth
+              ? Math.sqrt(data.metroPop.National[index]) / bubbleRadiusDesktop
+              : Math.sqrt(data.metroPop.National[index]) / bubbleRadiusMobile, // Bubble radius
         }));
 
         // Update chart's x-axis title
