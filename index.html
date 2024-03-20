@@ -22,6 +22,15 @@
 
     <!-- bubble chart -->
     <script>
+      // set pixel width variables
+      const desktopWidth = window.innerWidth >= 768;
+      const tabletWidth = window.innerWidth >= 480 && window.innerWidth < 768;
+      const mobileWidth = window.innerWidth < 480;
+
+      const desktopTitle =
+        "Black-Owned Firms vs. Black Employment in Largest US Metros";
+      const mobileTitle = "Black-Owned Businesses & Employment";
+
       const data = {
         // 2022 metro population totals from Wiki
         metroPop: {
@@ -110,9 +119,15 @@
           datasets: [
             {
               data: initialData,
-              backgroundColor: "rgba(255, 99, 132, 0.6)", // Bubble color
+              backgroundColor: (context) => {
+                if (context.dataIndex === 7) {
+                  // corresponds to "Atlanta", the 8th item above
+                  return "rgba(99, 210, 255, 0.7)";
+                } else {
+                  return "rgba(255, 99, 132, 0.7)";
+                }
+              },
               borderWidth: 0,
-              hoverBackgroundColor: "rgba(255, 99, 132, 0.9)",
               hoverRadius: 6, // additional width, in pixels, on hover
               hitRadius: 30, // hit detection
             },
@@ -129,10 +144,19 @@
             tooltip: {
               mode: "nearest",
               displayColors: false, // remove the colored square in the tooltip
-              backgroundColor: "rgba(108,111,109,0.8)",
+              backgroundColor: "rgba(0,0,0,0.8)",
               titleAlign: "center",
+              titleColor: (context) => {
+                if (context.tooltip.title[0] === "Atlanta") {
+                  // corresponds to "Atlanta", the 8th item above
+                  return "rgb(99, 210, 255)";
+                } else {
+                  return "rgb(255, 99, 132)";
+                }
+              },
               titleFont: {
                 size: 16,
+                weight: "900",
               },
               bodyFont: {
                 size: 14,
@@ -165,10 +189,10 @@
             },
             title: {
               display: true,
-              text: "Black-Owned Firms vs. Black Employment in Largest US Metros", // Initial title
+              text: desktopWidth || tabletWidth ? desktopTitle : mobileTitle,
               font: {
                 weight: 600,
-                size: 18,
+                size: desktopWidth ? 18 : tabletWidth ? 14 : 12,
               },
               padding: {
                 top: 20,
