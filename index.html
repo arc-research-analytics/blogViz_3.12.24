@@ -163,11 +163,11 @@
                 }
               },
               titleFont: {
-                size: 16,
+                size: desktopWidth || tabletWidth ? 16 : 13,
                 weight: "900",
               },
               bodyFont: {
-                size: 14,
+                size: desktopWidth || tabletWidth ? 14 : 11,
               },
               callbacks: {
                 // Tooltip content adjustments for bubble chart
