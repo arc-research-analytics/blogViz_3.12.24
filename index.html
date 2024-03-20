@@ -27,9 +27,14 @@
       const tabletWidth = window.innerWidth >= 501 && window.innerWidth < 768;
       const mobileWidth = window.innerWidth < 501;
 
+      // chart title depending on screen width
       const desktopTitle =
         "Black-Owned Firms vs. Black Employment in Largest US Metros";
       const mobileTitle = "Black-Owned Businesses & Employment";
+
+      // bubble size depending on screen width
+      const bubbleRadiusDesktop = 150;
+      const bubbleRadiusMobile = 200;
 
       const data = {
         // 2022 metro population totals from Wiki
@@ -88,12 +93,15 @@
         BOFirms_employees: "Employees of Black-Owned Firms",
         BOFirms_payroll: "Annual Payroll of Black-Owned Firms",
       };
-      const bubbleRadius = 150;
 
       const initialData = data.BOFirms.National.map((value, index) => ({
         x: value,
         y: data.blackEmployment.National[index],
-        r: Math.sqrt(data.metroPop.National[index]) / bubbleRadius,
+        // r: Math.sqrt(data.metroPop.National[index]) / bubbleRadius,
+        r:
+          desktopWidth || tabletWidth
+            ? Math.sqrt(data.metroPop.National[index]) / bubbleRadiusDesktop
+            : Math.sqrt(data.metroPop.National[index]) / bubbleRadiusMobile,
       }));
 
       const myChart = new Chart(ctx, {
